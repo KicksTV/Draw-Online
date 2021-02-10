@@ -1,0 +1,27 @@
+{
+  "name": "draw-online",
+  "version": "1.0.0",
+  "description": "My first game app",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KicksTV/Draw-Online.git"
+  },
+  "keywords": [
+    "Game",
+    "RPG",
+    "OpenWorld"
+  ],
+  "author": "Llewellyn Brunsdon-Haland",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KicksTV/Draw-Online/issues"
+  },
+  "homepage": "https://github.com/KicksTV/Draw-Online#readme",
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}

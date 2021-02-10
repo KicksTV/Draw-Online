@@ -1,6 +1,7 @@
-class Player extends stateMixin(Entity) {
+class Monster extends moveMixin(stateMixin(Entity)) {
     constructor(x, y, sprite, state) {
         super(x, y, sprite, state); 
+
     }
     draw() {
         if (this.visable && this.sprite) this.sprite.draw()
