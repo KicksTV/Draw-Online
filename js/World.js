@@ -19,13 +19,32 @@ class World {
         push()
         translate(this.x, this.y)
         this.objects.forEach(obj => {
-            obj.call()
+            obj.draw()
         })
         pop()
     }
 
     update() {
-        this[this.state]();
+        this.objects.forEach(obj => {
+            obj.update()
+        })
+        // if (keyIsDown(RIGHT_ARROW)) {
+        //     this.setState("moveRightState")
+        // }
+        // else if (keyIsDown(LEFT_ARROW)) {
+        //     this.setState("moveLeftState")
+        // }
+        // else if (keyIsDown(UP_ARROW)) {
+        //     this.setState("moveUpState")
+        // }
+        // else if (keyIsDown(DOWN_ARROW)) {
+        //     this.setState("moveDownState")
+        // }
+        // else {
+        //     this.setState("idleState")
+        // }
+
+        // this[this.state]();
     }
 
     // State Functions

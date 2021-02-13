@@ -45,10 +45,7 @@ function setup() {
         var monster = new Monster(rx, ry, monsterSprite, "idleState")
 
     
-        world.objects.push(function() {
-            monster.draw()
-            // rect(rx, ry, 20, 20) 
-        })
+        world.objects.push(monster)
     }, 5000);
 
 
@@ -81,26 +78,9 @@ function fixedUpdate() {
 }
 
 function update() {
-    if (keyIsDown(RIGHT_ARROW)) {
-        player.setState("moveRightState")
-        world.setState("moveRightState")
-    }
-    else if (keyIsDown(LEFT_ARROW)) {
-        player.setState("moveLeftState")
-        world.setState("moveLeftState")
-    }
-    else if (keyIsDown(UP_ARROW)) {
-        player.setState("moveUpState")
-        world.setState("moveUpState")
-    }
-    else if (keyIsDown(DOWN_ARROW)) {
-        player.setState("moveDownState")
-        world.setState("moveDownState")
-    }
-    else {
-        player.setState("idleState")
-        world.setState("idleState")
-    }
+    //set the camera position to the ghost position
+    camera.position.x = player.x;
+    camera.position.y = player.y;
     objectLayer.update()
 }
 

@@ -35,6 +35,21 @@ class Sprite {
         if (animation == "idle") this.current_animation = "idleAnimation"
 
     }
+    mvX(value) {
+        this.sprite.position.x += value;
+    }
+    mvY(value) {
+        this.sprite.position.y += value;
+    }
+    mvXV(value) {
+        this.sprite.velocity.x = value;
+    }
+    mvYV(value) {
+        this.sprite.velocity.y = value;
+    }
+
+    // State functions
+
     idleAnimation() {
         this.sprite.changeAnimation('idle');
     }

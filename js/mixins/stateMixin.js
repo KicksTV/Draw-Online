@@ -1,16 +1,17 @@
-// Components Bar Component and Connection Mixin 
-const stateMixin = superclass => class extends superclass {
+const animationStateMixin = superclass => class extends superclass {
 
     updateState() {
         this[this.state]();
     }
-
-    // State Functions
     setState(state) {
         this.state = state;
     }
+
+    // State Functions
+    
     idleState() {
         if (this.sprite) this.sprite.setAnimation("idle")
+        
     }
     moveRightState() {
         if (this.sprite) {
