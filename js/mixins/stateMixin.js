@@ -1,4 +1,4 @@
-const animationStateMixin = superclass => class extends superclass {
+const stateMixin = superclass => class extends superclass {
 
     updateState() {
         this[this.state]();
@@ -11,7 +11,6 @@ const animationStateMixin = superclass => class extends superclass {
     
     idleState() {
         if (this.sprite) this.sprite.setAnimation("idle")
-        
     }
     moveRightState() {
         if (this.sprite) {

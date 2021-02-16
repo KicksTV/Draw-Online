@@ -1,30 +1,12 @@
-class Player extends moveMixin(animationStateMixin(Entity)) {
-    constructor(x, y, sprite, state) {
-        super(x, y, sprite, state); 
+class Player extends moveMixin(stateMixin(Entity)) {
+    constructor(sprite, state) {
+        super(sprite, state);
     }
     draw() {
-        if (this.visable && this.sprite) this.sprite.draw()
+        if (this.visable && this.sprite) this.sprite.drawSprite()
     }
     update() {
-        if (keyIsDown(RIGHT_ARROW)) {
-            this.setState("moveRightState")
-            this.mvX(2)
-        }
-        else if (keyIsDown(LEFT_ARROW)) {
-            this.setState("moveLeftState")
-            this.mvX(-2)
-        }
-        else if (keyIsDown(UP_ARROW)) {
-            this.setState("moveUpState")
-            this.mvY(-2)
-        }
-        else if (keyIsDown(DOWN_ARROW)) {
-            this.setState("moveDownState")
-            this.mvY(2)
-        }
-        else {
-            this.setState("idleState")
-        }
+        this.checkIsMoving()
         this.updateState()
     }
     show() {
@@ -35,6 +17,27 @@ class Player extends moveMixin(animationStateMixin(Entity)) {
     }
     toggleVisability() {
         this.visable = !this.visable
+    }
+    checkIsMoving() {
+        if (keyIsDown(RIGHT_ARROW)) {
+            this.setState("moveRightState")
+            this.mvX(this, 2)
+        }
+        else if (keyIsDown(LEFT_ARROW)) {
+            this.setState("moveLeftState")
+            this.mvX(this, -2)
+        }
+        else if (keyIsDown(UP_ARROW)) {
+            this.setState("moveUpState")
+            this.mvY(this, -2)
+        }
+        else if (keyIsDown(DOWN_ARROW)) {
+            this.setState("moveDownState")
+            this.mvY(this, 2)
+        }
+        else {
+            this.setState("idleState")
+        }
     }
     
 }

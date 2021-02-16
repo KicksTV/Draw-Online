@@ -2,19 +2,22 @@
 var objectLayer;
 
 var playerSprite;
+var koboldSprite;
+
 var player;
 var world;
 
 var loop;
 var cleared;
 
+var animations = new P5Animation()
+
 
 // P5 Functions
 function preload() {
     // specify width and height of each frame and number of frames
-    playerSprite = new Sprite(250, 250, 48, 48)
-    playerSprite.addImage('idle', 'img/gabe/gabe-idle.png')
-    playerSprite.loadAnimationSheet('run', 'img/gabe/gabe-idle-run.png', 48, 48, 7)
+    animations.loadAnimationSheet("gabe", 48, 48, 7)
+    animations.loadAnimationSheet("kobold", 48, 48, 15)
 }
 
 function setup() {
@@ -26,30 +29,15 @@ function setup() {
     objectLayer = new ObjectLayer()
 
     world = new World(0, 0, 500, 500)
-
+    world.startWorldClock()
 
     // Activate animations
-    playerSprite.addAnimations()
+    animations.addAnimations()
 
+    playerSprite = new Sprite("gabe", 250, 250, 48, 48)
+    koboldSprite = new Sprite("kobold", 30, 30, 48, 48)
 
-    // Dynamically spawn monsters onto the world
-    loop = setInterval( function() {
-        let rx = random(500);
-        let ry = random(500);
-
-        var monsterSprite = new Sprite(rx, ry, 48, 48);
-        monsterSprite.addImage('idle', 'img/mobs/kobold-idle.png')
-        monsterSprite.loadAnimationSheet('run', 'img/mobs/kobold-run.png', 48, 48, 15)
-        monsterSprite.addAnimations()
-
-        var monster = new Monster(rx, ry, monsterSprite, "idleState")
-
-    
-        world.objects.push(monster)
-    }, 5000);
-
-
-    player = new Player(250, 250, playerSprite, "idleState")
+    player = new Player(playerSprite, "idleState")
 
     objectLayer.push(world)
     objectLayer.push(player)
@@ -79,8 +67,8 @@ function fixedUpdate() {
 
 function update() {
     //set the camera position to the ghost position
-    camera.position.x = player.x;
-    camera.position.y = player.y;
+    camera.position.x = player.getX()
+    camera.position.y = player.getY()
     objectLayer.update()
 }
 

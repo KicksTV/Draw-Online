@@ -1,10 +1,9 @@
-class Monster extends agroMixin(moveMixin(animationStateMixin(Entity))) {
-    constructor(x, y, sprite, state) {
-        super(x, y, sprite, state); 
-
+class Monster extends agroMixin(moveMixin(stateMixin(Entity))) {
+    constructor(sprite=new Sprite(20,20,20,20), state) {
+        super(sprite, state); 
     }
     draw() {
-        if (this.visable && this.sprite) this.sprite.draw()
+        if (this.visable && this.sprite) this.sprite.drawSprite()
     }
     update() {
         this.inAgroRange(player)

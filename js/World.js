@@ -6,14 +6,9 @@ class World {
         this.h = args[3]
 
         this.objects = [] // contains object draw functions e.g. rect()
+        this.mobsToSpawn = [] // contains a list of mobs that should spawn in the world
 
         this.state = "idleState"
-    }
-    mvX(value) {
-        this.x += value
-    }
-    mvY(value) {
-        this.y += value
     }
     draw() {
         push()
@@ -23,46 +18,27 @@ class World {
         })
         pop()
     }
-
     update() {
         this.objects.forEach(obj => {
             obj.update()
         })
-        // if (keyIsDown(RIGHT_ARROW)) {
-        //     this.setState("moveRightState")
-        // }
-        // else if (keyIsDown(LEFT_ARROW)) {
-        //     this.setState("moveLeftState")
-        // }
-        // else if (keyIsDown(UP_ARROW)) {
-        //     this.setState("moveUpState")
-        // }
-        // else if (keyIsDown(DOWN_ARROW)) {
-        //     this.setState("moveDownState")
-        // }
-        // else {
-        //     this.setState("idleState")
-        // }
-
-        // this[this.state]();
+    }
+    startWorldClock() {
+        var self = this
+        // Dynamically do tasks
+        loop = setInterval( function() {
+            if (self.objects.length < 3) {
+                let rx = random(500)
+                let ry = random(500)
+        
+                var kobold = new Kobold()
+                self.objects.push(kobold)
+            }
+        }, 5000);
     }
 
     // State Functions
     setState(state) {
         this.state = state;
-    }
-    idleState() {
-    }
-    moveRightState() {
-        this.mvX(-2)
-    }
-    moveLeftState() {
-        this.mvX(2)
-    }
-    moveUpState() {
-        this.mvY(2);
-    }
-    moveDownState() {
-        this.mvY(-2);
     }
 }
