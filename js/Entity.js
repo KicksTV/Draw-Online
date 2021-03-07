@@ -7,5 +7,8 @@ class Entity {
     }
 
     getX() { return this.sprite.position.x }
+    setX(val) { this.sprite.position.x = val }
     getY() { return this.sprite.position.y }
+    setY(val) { this.sprite.position.y = val }
+
 }

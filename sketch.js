@@ -10,7 +10,11 @@ var world;
 var loop;
 var cleared;
 
+var noise_grid;
+
 var animations = new P5Animation()
+
+let ca;
 
 
 // P5 Functions
@@ -21,26 +25,38 @@ function preload() {
 }
 
 function setup() {
-    var cnv = createCanvas(500, 500)
-    let x = (windowWidth - width) / 2;
-    let y = (windowHeight - height) / 2;
-    cnv.position(x, y);
+    var cnv = createCanvas(windowWidth, windowHeight)
+    cnv.parent("canvas")
+
+    let worldWidth = Math.ceil(1 * width)
+    let worldHeight = Math.ceil(1 * height)
+
+    world = new World(0, 0, worldWidth, worldHeight)
+    world.startWorldClock()
+
+    ca = new Cellular_Automata()
+    noise_grid = ca.generateNoiseGrid(40, Math.ceil(worldWidth/16), Math.ceil(worldHeight/16))
+
+
+    ca.apply_cellular_automaton(noise_grid, 7)
+
+
 
     objectLayer = new ObjectLayer()
-
-    world = new World(0, 0, 500, 500)
-    world.startWorldClock()
 
     // Activate animations
     animations.addAnimations()
 
-    playerSprite = new Sprite("gabe", 250, 250, 48, 48)
+    playerSprite = new Sprite("gabe", 256, 256, 48, 48)
     koboldSprite = new Sprite("kobold", 30, 30, 48, 48)
 
     player = new Player(playerSprite, "idleState")
 
     objectLayer.push(world)
     objectLayer.push(player)
+
+
+    camera.zoom = 1.5
 
 }
 
@@ -54,9 +70,10 @@ function draw() {
 }
 
 function keyPressed() {
-    if (keyCode === 83 && !cleared) {
-        console.log("Stopped creation loop!")
-        cleared = clearInterval(loop);
+    if (keyCode === 83) {
+        console.log("Applied Cellular Automaton")
+        // cleared = clearInterval(loop);
+        ca.apply_cellular_automaton(noise_grid, 1)
     }
 }
 
@@ -66,6 +83,7 @@ function fixedUpdate() {
 }
 
 function update() {
+
     //set the camera position to the ghost position
     camera.position.x = player.getX()
     camera.position.y = player.getY()
@@ -78,8 +96,15 @@ function lateUpdate() {
 
 function render() {
     objectLayer.draw()
+
+    push()
+    let fps = frameRate()
+    fill(255)
+    stroke(0)
+    text("FPS: " + fps.toFixed(2), camera.position.x-620, camera.position.y+300)
+    pop()
 }
 
 function staticRender() {
-    background(50)
+    world.staticRender()
 }

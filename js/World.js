@@ -23,18 +23,99 @@ class World {
             obj.update()
         })
     }
+    staticRender() {
+        background(25, 55, 25)
+        if (noise_grid) this.generateWorld()
+    }
     startWorldClock() {
         var self = this
         // Dynamically do tasks
         loop = setInterval( function() {
             if (self.objects.length < 3) {
-                let rx = random(500)
-                let ry = random(500)
+                let rx = random(width)
+                let ry = random(height)
         
-                var kobold = new Kobold()
+                var kobold = new Kobold(rx, ry)
                 self.objects.push(kobold)
             }
         }, 5000);
+    }
+    
+    generateWorld() {
+        let startingX;
+        // let startingY;
+        let length = 0;
+        for (var i=0;i<Math.ceil(this.h/16);i++) {
+            for (var j=0;j<Math.ceil(this.w/16);j++) {
+                if (j < camera.position.x/16+42 && i < camera.position.y/16+22) {
+                    if (j > camera.position.x/16-42 && i > camera.position.y/16-22) {
+                        if (noise_grid[i][j]) {
+                            if (!Number.isInteger(startingX)) {
+                                startingX = j
+                            }
+                            length += 16
+                        } else {
+                            if (Number.isInteger(startingX)) {
+                                push()
+                                noStroke();
+                                fill(color(3, 144, 191))
+                                rect(startingX*16, i*16, length, 16)
+                                pop()
+
+                                startingX = null
+                                length = 0
+                            }
+                        }
+                    } else {
+                        if (Number.isInteger(startingX)) {
+                            push()
+                            noStroke();
+                            fill(color(3, 144, 191))
+                            rect(startingX*16, i*16, length, 16)
+                            pop()
+
+                            startingX = null
+                            length = 0
+                        }
+                    }
+                } else {
+                    if (Number.isInteger(startingX)) {
+                        push()
+                        noStroke();
+                        fill(color(3, 144, 191))
+                        rect(startingX*16, i*16, length, 16)
+                        pop()
+
+                        startingX = null
+                        length = 0
+                    }
+                }
+            }
+            if (Number.isInteger(startingX)) {
+                push()
+                noStroke();
+                fill(color(3, 144, 191))
+                rect(startingX*16, i*16, length, 16)
+                pop()
+
+                startingX = null
+                length = 0
+            }
+        }
+        if (Number.isInteger(startingX)) {
+            push()
+            noStroke();
+            fill(color(3, 144, 191))
+            rect(startingX*16, i*16, length, 16)
+            pop()
+
+            startingX = null
+            length = 0
+        }
+    }
+
+    is_within_map_bounds(x, y) {
+        return (x >= 0 && x <= this.w-16 && y >= 0 && y <= this.h-16)
     }
 
     // State Functions
