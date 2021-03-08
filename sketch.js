@@ -16,6 +16,8 @@ var animations = new P5Animation()
 
 let ca;
 
+const worldBlockSize = 16
+
 
 // P5 Functions
 function preload() {
@@ -35,7 +37,7 @@ function setup() {
     world.startWorldClock()
 
     ca = new Cellular_Automata()
-    noise_grid = ca.generateNoiseGrid(40, Math.ceil(worldWidth/16), Math.ceil(worldHeight/16))
+    noise_grid = ca.generateNoiseGrid(40, worldWidth/16, worldHeight/16)
 
 
     ca.apply_cellular_automaton(noise_grid, 7)

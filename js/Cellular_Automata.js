@@ -50,7 +50,7 @@ class Cellular_Automata {
                                     }
                                 }
                             } else {
-                                border = true
+                                // border = true
                             }
                         }
                     }

@@ -25,7 +25,7 @@ class World {
     }
     staticRender() {
         background(25, 55, 25)
-        if (noise_grid) this.generateWorld()
+        this.renderWorld()
     }
     startWorldClock() {
         var self = this
@@ -41,9 +41,8 @@ class World {
         }, 5000);
     }
     
-    generateWorld() {
+    renderWorld() {
         let startingX;
-        // let startingY;
         let length = 0;
         for (var i=0;i<Math.ceil(this.h/16);i++) {
             for (var j=0;j<Math.ceil(this.w/16);j++) {
@@ -55,67 +54,38 @@ class World {
                             }
                             length += 16
                         } else {
-                            if (Number.isInteger(startingX)) {
-                                push()
-                                noStroke();
-                                fill(color(3, 144, 191))
-                                rect(startingX*16, i*16, length, 16)
-                                pop()
-
-                                startingX = null
-                                length = 0
-                            }
+                            let r = this.displayRock(startingX, length, i)
+                            startingX = r[0], length = r[1]
                         }
                     } else {
-                        if (Number.isInteger(startingX)) {
-                            push()
-                            noStroke();
-                            fill(color(3, 144, 191))
-                            rect(startingX*16, i*16, length, 16)
-                            pop()
-
-                            startingX = null
-                            length = 0
-                        }
+                        let r = this.displayRock(startingX, length, i)
+                        startingX = r[0], length = r[1]
                     }
                 } else {
-                    if (Number.isInteger(startingX)) {
-                        push()
-                        noStroke();
-                        fill(color(3, 144, 191))
-                        rect(startingX*16, i*16, length, 16)
-                        pop()
-
-                        startingX = null
-                        length = 0
-                    }
+                    let r = this.displayRock(startingX, length, i)
+                    startingX = r[0], length = r[1]
                 }
             }
-            if (Number.isInteger(startingX)) {
-                push()
-                noStroke();
-                fill(color(3, 144, 191))
-                rect(startingX*16, i*16, length, 16)
-                pop()
-
-                startingX = null
-                length = 0
-            }
+            let r = this.displayRock(startingX, length, i)
+            startingX = r[0], length = r[1]
         }
+       
+    }
+    is_within_map_bounds(x, y) {
+        return (x >= 0 && x <= this.w-16 && y >= 0 && y <= this.h-16)
+    }
+    displayRock(startingX, length, i) {
         if (Number.isInteger(startingX)) {
             push()
             noStroke();
-            fill(color(3, 144, 191))
+            fill(color(156, 69, 3))
             rect(startingX*16, i*16, length, 16)
             pop()
 
             startingX = null
             length = 0
         }
-    }
-
-    is_within_map_bounds(x, y) {
-        return (x >= 0 && x <= this.w-16 && y >= 0 && y <= this.h-16)
+        return [startingX, length]
     }
 
     // State Functions
