@@ -4,17 +4,12 @@ class Cellular_Automata {
     }
 
     generateNoiseGrid(density, width, height) {
-        console.log(width)
-        console.log(height)
         width = Math.ceil(1 * width)
         height = Math.ceil(1 * height)
 
-        console.log(width)
-        console.log(height)
-
         noise_grid = Array.from(Array(height), () => new Array(width))
 
-        console.log(noise_grid)
+        // console.log(noise_grid)
         for (var i=0;i<height;i++) {
             for (var j=0;j<width;j++) {
                 var random = Math.floor(Math.random() * 101);  

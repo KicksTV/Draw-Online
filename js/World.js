@@ -44,23 +44,47 @@ class World {
     renderWorld() {
         let startingX;
         let length = 0;
-        for (var i=0;i<Math.ceil(this.h/16);i++) {
-            for (var j=0;j<Math.ceil(this.w/16);j++) {
-                if (j < camera.position.x/16+42 && i < camera.position.y/16+22) {
-                    if (j > camera.position.x/16-42 && i > camera.position.y/16-22) {
-                        if (noise_grid[i][j]) {
-                            if (!Number.isInteger(startingX)) {
-                                startingX = j
-                            }
-                            length += 16
-                        } else {
-                            let r = this.displayRock(startingX, length, i)
-                            startingX = r[0], length = r[1]
-                        }
-                    } else {
-                        let r = this.displayRock(startingX, length, i)
-                        startingX = r[0], length = r[1]
+        let half_height = Math.round(this.h / 2)
+        let half_width = Math.round(this.w / 2)
+        let camera_x = Math.round(camera.position.x)
+        let camera_y = Math.round(camera.position.y)
+        console.log("half_height: ", half_height)
+        console.log("half_width: ", half_width)
+        console.log("camera_x", camera_x)
+        console.log("camera_y", camera_y)
+
+        let xs = [camera_x-half_width, camera_x+half_width]
+        let ys = [camera_y-half_height, camera_y+half_height]
+        // let ys = [0, this.h]
+        // let xs = [0, this.w]
+        let noise_grid_h_i = Math.round(noise_grid.length / 2) -1
+
+        console.log("ys: ", ys)
+        console.log("xs: ", xs)
+        
+        for (var i=ys[0];i<Math.ceil(ys[1]/16);i++) {
+            for (var j=xs[0];j<Math.ceil(xs[1]/16);j++) {
+                console.log("noise_grid_h_i: ", noise_grid_h_i, "i: ", i)
+                let hi = noise_grid_h_i + i
+                console.log(hi)
+                let y_noise_grid = noise_grid[hi]
+                console.log(y_noise_grid)
+                if (!y_noise_grid) {
+                    console.log("y: ", i, "x: ", j)
+                    continue
+                }
+                let noise_grid_w_i =  Math.round(y_noise_grid.length / 2) - 1
+                console.log("noise_grid_w_i: ", noise_grid_w_i, "j: ", j)
+                let wi = noise_grid_w_i + j
+                console.log(wi)
+
+                var grid_y_x = y_noise_grid[wi] // noise_grid[i][j]
+                print(grid_y_x)
+                if (grid_y_x) {
+                    if (!Number.isInteger(startingX)) {
+                        startingX = j
                     }
+                    length += 16
                 } else {
                     let r = this.displayRock(startingX, length, i)
                     startingX = r[0], length = r[1]

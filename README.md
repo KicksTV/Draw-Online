@@ -1,2 +1,2 @@
 # Draw-Online
-Photoshop but online
+My first game.

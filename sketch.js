@@ -30,15 +30,18 @@ function setup() {
     var cnv = createCanvas(windowWidth, windowHeight)
     cnv.parent("canvas")
 
-    let worldWidth = Math.ceil(1 * width)
-    let worldHeight = Math.ceil(1 * height)
+    let worldWidth =  1280 // Math.ceil(1 * width)
+    let worldHeight =  960 // Math.ceil(1 * height)
+
+    console.log("width: ", worldWidth, "height: ", worldHeight)
 
     world = new World(0, 0, worldWidth, worldHeight)
     world.startWorldClock()
 
     ca = new Cellular_Automata()
-    noise_grid = ca.generateNoiseGrid(40, worldWidth/16, worldHeight/16)
+    noise_grid = ca.generateNoiseGrid(40, (1280)/16, (960)/16) // 11520/16, 5778/16
 
+    console.log(noise_grid)
 
     ca.apply_cellular_automaton(noise_grid, 7)
 
@@ -49,7 +52,7 @@ function setup() {
     // Activate animations
     animations.addAnimations()
 
-    playerSprite = new Sprite("gabe", 256, 256, 48, 48)
+    playerSprite = new Sprite("gabe", 640, 480, 48, 48)
     koboldSprite = new Sprite("kobold", 30, 30, 48, 48)
 
     player = new Player(playerSprite, "idleState")
@@ -69,6 +72,7 @@ function draw() {
     update()        // game logic
     lateUpdate()    // after movement
     render()
+    noLoop()
 }
 
 function keyPressed() {
