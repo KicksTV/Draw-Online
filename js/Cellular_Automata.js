@@ -32,8 +32,8 @@ class Cellular_Automata {
         for (var i=0; i<count;i++) {
             var temp_grid = _.cloneDeep(grid)
 
-            for (let y=0;y<Math.ceil(world.h/16);y++) {
-                for (let x=0;x<Math.ceil(world.w/16);x++) {
+            for (let y=0;y<Math.ceil(screen_h/16);y++) {
+                for (let x=0;x<Math.ceil(screen_w/16);x++) {
                     var neighbor_wall_count = 0
                     let border = false
 

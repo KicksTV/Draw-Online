@@ -44,8 +44,8 @@ class World {
     renderWorld() {
         let startingX;
         let length = 0;
-        for (var i=0;i<Math.ceil(this.h/16);i++) {
-            for (var j=0;j<Math.ceil(this.w/16);j++) {
+        for (var i=0;i<Math.ceil(screen_h/16);i++) {
+            for (var j=0;j<Math.ceil(screen_w/16);j++) {
                 if (j < camera.position.x/16+42 && i < camera.position.y/16+22) {
                     if (j > camera.position.x/16-42 && i > camera.position.y/16-22) {
                         if (noise_grid[i][j]) {

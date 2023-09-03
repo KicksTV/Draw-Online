@@ -7,10 +7,15 @@ var koboldSprite;
 var player;
 var world;
 
+var screen_w;
+var screen_h;
+
+var chunk_size = 160;
+
 var loop;
 var cleared;
 
-var noise_grid;
+var noise_grids = [];
 
 var animations = new P5Animation()
 
@@ -30,26 +35,28 @@ function setup() {
     var cnv = createCanvas(windowWidth, windowHeight)
     cnv.parent("canvas")
 
-    let worldWidth = Math.ceil(1 * width)
-    let worldHeight = Math.ceil(1 * height)
+    let worldWidth = 1280 // Math.ceil(1 * width)
+    let worldHeight = 960 // Math.ceil(1 * height)
+
+    screen_w = 1280
+    screen_y = 960
 
     world = new World(0, 0, worldWidth, worldHeight)
     world.startWorldClock()
 
+    var grid_cords = []
+
     ca = new Cellular_Automata()
-    noise_grid = ca.generateNoiseGrid(40, worldWidth/16, worldHeight/16)
 
-
-    ca.apply_cellular_automaton(noise_grid, 7)
-
-
+    noise_grids.push(ca.generateNoiseGrid(40, screen_w/16, screen_h/16))
+    ca.apply_cellular_automaton(noise_grids, 7)
 
     objectLayer = new ObjectLayer()
 
     // Activate animations
     animations.addAnimations()
 
-    playerSprite = new Sprite("gabe", 256, 256, 48, 48)
+    playerSprite = new Sprite("gabe", 0, 0, 48, 48)
     koboldSprite = new Sprite("kobold", 30, 30, 48, 48)
 
     player = new Player(playerSprite, "idleState")
