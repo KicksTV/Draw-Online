@@ -4,6 +4,7 @@ class Entity {
         this.sprite = args[0] // graphic
         this.state = args[1] // starting state (Must be a string)
         this.visable = true
+        this.cares_about_walls = false
     }
 
     getX() { return this.sprite.position.x }

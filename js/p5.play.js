@@ -4352,7 +4352,7 @@ p5.prototype.registerMethod('post', cameraPop);
 
 /**
  * Log a warning message to the host console, using native `console.warn`
- * if it is available but falling back on `console.log` if not.  If no
+ * if it is available but falling back on `log` if not.  If no
  * console is available, this method will fail silently.
  * @method _warn
  * @param {!string} message
@@ -4367,9 +4367,9 @@ p5.prototype._warn = function(message) {
     {
       console.warn(message);
     }
-    else if('function' === typeof console.log)
+    else if('function' === typeof log)
     {
-      console.log('Warning: ' + message);
+      log('Warning: ' + message);
     }
   }
 };

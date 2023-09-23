@@ -44,23 +44,33 @@ class World {
     renderWorld() {
         let startingX;
         let length = 0;
-        for (var i=0;i<Math.ceil(screen_h/16);i++) {
-            for (var j=0;j<Math.ceil(screen_w/16);j++) {
-                if (j < camera.position.x/16+42 && i < camera.position.y/16+22) {
-                    if (j > camera.position.x/16-42 && i > camera.position.y/16-22) {
-                        if (noise_grid[i][j]) {
-                            if (!Number.isInteger(startingX)) {
-                                startingX = j
-                            }
-                            length += 16
-                        } else {
-                            let r = this.displayRock(startingX, length, i)
-                            startingX = r[0], length = r[1]
-                        }
-                    } else {
-                        let r = this.displayRock(startingX, length, i)
-                        startingX = r[0], length = r[1]
+        let half_height = Math.round(windowHeight / 2)
+        let half_width = Math.round(windowWidth / 2)
+        let camera_x = Math.round(camera.position.x)
+        let camera_y = Math.round(camera.position.y)
+        log("half_height: ", half_height)
+        log("half_width: ", half_width)
+        log("camera_x", camera_x)
+        log("camera_y", camera_y)
+        log(noise_grid)
+
+        let xs = [Number.parseInt((camera_x-half_width) / 16), Number.parseInt((camera_x+half_width) / 16)]
+        let ys = [Number.parseInt((camera_y-half_height) / 16), Number.parseInt((camera_y+half_height) / 16)]
+        log("ys: ", ys)
+        log("xs: ", xs)
+
+        for (var i=ys[0];i<Math.ceil(ys[1]);i++) {
+            log(i)
+            if (i % 1 != 0)
+                break
+            for (var j=xs[0];j<Math.ceil(xs[1]);j++) {
+                if (j % 1 != 0)
+                    break
+                if (Cellular_Automata.getNoiseGrid(noise_grid, j, i)) {
+                    if (!Number.isInteger(startingX)) {
+                        startingX = j
                     }
+                    length += 16
                 } else {
                     let r = this.displayRock(startingX, length, i)
                     startingX = r[0], length = r[1]
@@ -86,6 +96,13 @@ class World {
             length = 0
         }
         return [startingX, length]
+    }
+
+    static isWall(x, y) {
+        var gridx = Number.parseInt(x),
+            gridy = Number.parseInt(y);
+        return Cellular_Automata.getNoiseGrid(noise_grid, gridx, gridy)
+
     }
 
     // State Functions
