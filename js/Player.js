@@ -1,7 +1,7 @@
 class Player extends moveMixin(stateMixin(Entity)) {
     constructor(sprite, state) {
         super(sprite, state);
-        this.cares_about_walls = true
+        this.cares_about_walls = false
     }
     draw() {
         if (this.visable && this.sprite) this.sprite.drawSprite()

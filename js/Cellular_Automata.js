@@ -1,5 +1,6 @@
 class Cellular_Automata {
     constructor() {
+        this.grid_pattern = {} // e.g. {'y_x': [neighbors]}
     }
 
     static getNoiseGrid(noise_grid, gridX, gridY) {
@@ -43,11 +44,13 @@ class Cellular_Automata {
     apply_cellular_automaton(grid, count) {
         for (var i=0; i<count;i++) {
             var temp_grid = _.cloneDeep(grid)
-
-            for (let y=0;y<Math.ceil(world.h/16);y++) {
-                for (let x=0;x<Math.ceil(world.w/16);x++) {
+            for (let y=0;y<Math.ceil(world.h/worldBlockSize);y++) {
+                for (let x=0;x<Math.ceil(world.w/worldBlockSize);x++) {
+                    var neighbors = []
                     var neighbor_wall_count = 0
                     let border = false
+                    
+                    // console.log(y,x)
 
                     for (let l=0;l<3;l++) {
                         let neighborX = this.get_neighbor_wall(x, l)
@@ -55,9 +58,11 @@ class Cellular_Automata {
                         for (let o=0;o<3;o++) {
                             let neighborY = this.get_neighbor_wall(y, o)
                            
-                            if (world.is_within_map_bounds(neighborX*16, neighborY*16)) {
+                            if (world.is_within_map_bounds(neighborX*worldBlockSize, neighborY*worldBlockSize)) {
                                 if (neighborX != x || neighborY != y) {
-                                    if (temp_grid[neighborY][neighborX]) {
+                                    var block = temp_grid[neighborY][neighborX]
+                                    neighbors.push(block)
+                                    if (block) {
                                         neighbor_wall_count++
                                     }
                                 }
@@ -66,10 +71,30 @@ class Cellular_Automata {
                             }
                         }
                     }
+
+                    // smoothing jaggid blocks
                     if (neighbor_wall_count > 4 || border) {
                         grid[y][x] = true
-                    } else {
+                    }
+                    else if (temp_grid[y][x] && neighbors[1] && neighbors[2] && neighbors[4] && neighbors[7]) {
+                        grid[y][x] = true
+                    }
+                    else if (temp_grid[y][x] && neighbors[0] && neighbors[2] && neighbors[3] && neighbors[6]) {
+                        grid[y][x] = true
+                    }
+                    else if (temp_grid[y][x] && neighbors[0] && neighbors[5] && neighbors[6] && neighbors[7]) {
+                        grid[y][x] = true
+                    }
+                    else if (temp_grid[y][x] && neighbors[0] && neighbors[2] && neighbors[3] && neighbors[4]) {
+                        grid[y][x] = true
+                    }
+                    else {
                         grid[y][x] = false
+                    }
+                    
+                    if (i == count-1) {
+                        // remember cord and there neighbors for use later
+                        this.grid_pattern[`${y}_${x}`] = neighbors
                     }
                 }
             }

@@ -12,9 +12,8 @@ const agroMixin = superclass => class extends superclass {
         let mvXVal = xval > 0 ? (xval / xval) * -1 : (xval / xval) * 1
         let yval = this.getY() - ofThis.getY()
         let mvYVal = yval > 0 ? (yval / yval) * -1 : (yval / yval) * 1
-
         if (int(this.getX()) != int(ofThis.getX())) {
-            this.mvX(this, mvXVal)
+            this.mvX(mvXVal)
             if (mvXVal > 0) {
                 this.setState("moveRightState")
             }
@@ -23,7 +22,7 @@ const agroMixin = superclass => class extends superclass {
             }
         }
         if (int(this.getY()) != int(ofThis.getY())) {
-            this.mvY(this, mvYVal)
+            this.mvY(mvYVal)
             if (mvYVal > 0) {
                 this.setState("moveUpState")
             }

@@ -21,8 +21,8 @@ const moveMixin = superclass => class extends superclass {
             y += this.sprite.height/2
         else
             y -= this.sprite.height/2
-        x = x/16
-        y = y/16
+        x = x/worldBlockSize
+        y = y/worldBlockSize
 
 
         // console.log(x, y)
