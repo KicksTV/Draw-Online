@@ -1,5 +1,5 @@
 class Monster extends agroMixin(moveMixin(stateMixin(Entity))) {
-    constructor(sprite=new Sprite(20,20,20,20), state) {
+    constructor(sprite=new Sprit(20,20,20,20), state) {
         super(sprite, state); 
     }
     draw() {

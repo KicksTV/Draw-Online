@@ -7,17 +7,20 @@ class P5Animation {
     get(key) {
         return this.animations.get(key)
     }
-    loadPlayerAnimationSheet(character, w, h, frames) {
+    loadPlayerAnimationSheet(character, frames) {
         this.load_animations.push({name: character, 
-                                   animation: loadSpriteSheet(`img/${character}/${character}-run.png`, w, h, frames)})
+                                   animations: [
+                                    ['run', loadAni(`img/${character}/${character}-run.png`, frames)],
+                                    ['idle', loadAni(`img/${character}/${character}-run.png`, frames)],
+                                ]})
     }
-    loadTileAnimationSheet(tile, w, h, frames) {
+    loadTileAnimationSheet(tile, frames) {
         this.load_animations.push({name: tile, 
-                                   animation: loadSpriteSheet(`img/tiles/${tile}/${tile}.png`, w, h, frames)})
+                                   animations: [loadAni(`img/tiles/${tile}/${tile}.png`, frames)]})
     }
     addAnimations() {
         this.load_animations.forEach(obj => {
-            this.animations.set(obj.name, loadAnimation(obj.animation))
+            this.animations.set(obj.name, obj.animations)
         })
     }
 }

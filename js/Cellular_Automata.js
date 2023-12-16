@@ -1,6 +1,6 @@
 class Cellular_Automata {
     constructor() {
-        this.grid_pattern = {} // e.g. {'y_x': [neighbors]}
+        
     }
 
     static getNoiseGrid(noise_grid, gridX, gridY) {
@@ -44,8 +44,8 @@ class Cellular_Automata {
     apply_cellular_automaton(grid, count) {
         for (var i=0; i<count;i++) {
             var temp_grid = _.cloneDeep(grid)
-            for (let y=0;y<Math.ceil(world.h/worldBlockSize);y++) {
-                for (let x=0;x<Math.ceil(world.w/worldBlockSize);x++) {
+            for (let y=0;y<Math.ceil(w.h/worldBlockSize);y++) {
+                for (let x=0;x<Math.ceil(w.w/worldBlockSize);x++) {
                     var neighbors = []
                     var neighbor_wall_count = 0
                     let border = false
@@ -58,7 +58,7 @@ class Cellular_Automata {
                         for (let o=0;o<3;o++) {
                             let neighborY = this.get_neighbor_wall(y, o)
                            
-                            if (world.is_within_map_bounds(neighborX*worldBlockSize, neighborY*worldBlockSize)) {
+                            if (w.is_within_map_bounds(neighborX*worldBlockSize, neighborY*worldBlockSize)) {
                                 if (neighborX != x || neighborY != y) {
                                     var block = temp_grid[neighborY][neighborX]
                                     neighbors.push(block)
@@ -94,7 +94,7 @@ class Cellular_Automata {
                     
                     if (i == count-1) {
                         // remember cord and there neighbors for use later
-                        this.grid_pattern[`${y}_${x}`] = neighbors
+                        w.grid_pattern[`${y}_${x}`] = neighbors
                     }
                 }
             }

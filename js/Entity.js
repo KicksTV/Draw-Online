@@ -7,9 +7,9 @@ class Entity {
         this.cares_about_walls = false
     }
 
-    getX() { return this.sprite.position.x }
-    setX(val) { this.sprite.position.x = val }
-    getY() { return this.sprite.position.y }
-    setY(val) { this.sprite.position.y = val }
+    getX() { return this.sprite.sprite.x }
+    setX(val) { this.sprite.sprite.x = val }
+    getY() { return this.sprite.sprite.y }
+    setY(val) { this.sprite.sprite.y = val }
 
 }
