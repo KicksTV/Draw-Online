@@ -22,9 +22,46 @@ class customWorld {
         // tiles
         this.tiles={}
         this.tilesLookup={}
-        this.grid_pattern = {} // e.g. {'y_x': [neighbors]}
+        this.grid_pattern = {} // e.g. {'x_y': [neighbors]}
         this.waterTilesGroup;
         this.landTilesGroup;
+        this.landCharPatterns = {
+            t: '=',
+            tttttttt: '=', // all land
+            fftttttf: '(', // 40 top straight
+            fftttttt: '(', // 40 top straight
+            fttttttf: '(', // 40 top straight
+            fffttttf: '$', // 36 top right corner (49 (1) is another variation)
+            fffftttf: '$', // 36 top right corner (49 (1) is another variation)
+            fffttttt: '$', // 36 top right corner (49 (1) is another variation)
+            fffftttt: '$', // 36 top right corner (49 (1) is another variation)
+            tffftttt: '.', // 46 right straight
+            ttfftttt: '.', // 46 right straight
+            tffttttt: '.', // 46 right straight
+            tffffttt: '#', // 35 bottom right corner (42 (*) is another variation)
+            tffffftt: '#', // 35 bottom right corner (42 (*) is another variation)
+            ttfffftt: '#', // 35 bottom right corner (42 (*) is another variation)
+            ttfffttt: '#', // 35 bottom right corner (42 (*) is another variation)
+            tttffftt: '0', // 48 bottom straight
+            tttffttt: '0', // 48 bottom straight
+            ttttfftt: '0', // 48 bottom straight
+            tttfffft: '%', // 37 bottom left corner (44 (,) is another variation)
+            tttfffff: '%', // 37 bottom left corner (44 (,) is another variation)
+            ttttffft: '%', // 37 bottom left corner (44 (,) is another variation)
+            ttttffff: '%', // 37 bottom left corner (44 (,) is another variation)
+            tttttfff: '4', // 52 left straight
+            ttttttff: '4', // 52 left straight
+            tttttfft: '4', // 52 left straight
+            tttttfft: '4', // 52 left straight
+            fttttfff: '+', // 43 top left corner (50 (2) is another variation)
+            fftttfff: '+', // 43 top left corner (50 (2) is another variation)
+            ftttttff: '+', // 43 top left corner (50 (2) is another variation)
+            ffttttff: '+', // 43 top left corner (50 (2) is another variation)
+            tftttttt: '3', // 51 top right inner
+            tttftttt: '&', // 38 bottom right inner
+            tttttftt: ')', // 41 bottom left inner
+            tttttttf: '/', // 47 top left inner
+        };
 
 
         // garbage collection
@@ -82,45 +119,6 @@ class customWorld {
             }
 
 
-            // because we move the character by worldBlockSize and we add new blocks in the direction charater is moving, 
-            // so another worldBlockSize to add
-            // var worldBlockSizeX2 = worldBlockSize * 2
-
-
-            // // working out differences
-            // var steps = Number.parseInt(camera_y/worldBlockSize)
-            // var ydiff = steps > 0 ? steps - 1 : steps + 1
-            // var xdiff = (Number.parseInt(camera_x/worldBlockSize) - 1)
-
-            // var moved_y = 0;
-            // var moved_x = 0;
-
-            // console.log("diffs: ", xdiff, ydiff)
-            // if (steps != 0)
-                // moved_y = worldBlockSizeX2 * ydiff
-            // if (xdiff >= 0)
-                // moved_x = worldBlockSizeX2 * xdiff
-
-            // console.log("moved: ", moved_x, moved_y)
-            // var oppersite_y = moved_y - y
-            // var oppersite_x = moved_x - x
-
-            // console.log("oppersite: ", oppersite_x, oppersite_y)
-
-
-            // oppersite_x -= worldBlockSize
-
-
-            // if (oppersite_y > 0 && camera_y != 0)
-                // oppersite_y -= worldBlockSizeX2
-            
-            // oppersite_y -= worldBlockSize
-
-            // if (oppersite_x > 0 && camera_x != 0)
-                // oppersite_x -= worldBlockSizeX2
-            // // console.log(moved_y, oppersite_y)
-                
-
             // console.log("oppersite: ", oppersite_x, oppersite_y)
             var cords = `${oppersite_x}_${oppersite_y}`
 
@@ -164,13 +162,36 @@ class customWorld {
         }
         water.remove_opposite_tile = remove_opposite_tile
 
+        for (var land_char of Object.values(this.landCharPatterns)) {
+            if (land_char == '=' || this.tiles[land_char])
+                continue;
+            var land = new Group();
+            land.w = 32;
+            land.h = 32;
+            land.tile = land_char;
+            if (this.basicRender) {
+                land.color = 'green';
+                land.stroke = 'green';
+            } else {
+                land.addAni(`img/tiles/land/${land_char.charCodeAt(0)}/tile1.png`, 6);
+            }
+            land.collider = 'k';
+            land.layer = 1;
+            land.tiles = {}
+            land.add_tile = (tile) => {
+                land.tiles[`${tile.x}_${tile.y}`] = tile
+            }
+            land.remove_opposite_tile = remove_opposite_tile
+
+            this.tiles[land.tile] = land
+        }
 
         var land = new Group();
         land.w = 32;
         land.h = 32;
         land.tile = '=';
-        land.color = 'green';
-        land.stroke = 'green';
+        land.color = '#83a448';
+        land.stroke = '#83a448';
         land.collider = 'k';
         land.layer = 1;
         land.tiles = {}
@@ -180,11 +201,8 @@ class customWorld {
         land.remove_opposite_tile = remove_opposite_tile
 
         console.log(land)
-        this.tiles = {
-            [land.tile]: land,
-            [water.tile]: water
-        }
-
+        this.tiles[land.tile] = land
+        this.tiles[water.tile] = water
 
         // var waterTilesGroup = new Tiles(
         //     water_display_tile_grid, camera.x-half_width, camera.y-half_height, water.w, water.h
@@ -398,6 +416,79 @@ class customWorld {
         this.w = noise_grid[0].length * worldBlockSize
     }
 
+    gridPatternToChar(x_y) {
+        var pattern = this.grid_pattern[x_y],
+            pattern_key= '';
+        
+        if (!pattern)
+            return
+        // 
+        pattern_key = pattern.reduce((pv, cv) => pv + cv.toString()[0], pattern_key)
+
+        if (!this.landCharPatterns[pattern_key]) {
+            console.error(`Grid pattern key does not exist in landCharPatterns: ${pattern_key}`)
+        }
+
+        var char = this.landCharPatterns[pattern_key]
+
+        // if (pattern.join(',') === [true, true, true, true, true, false, false, false].join(',')) {
+        //     console.log(x_y, pattern, pattern_key, char)
+        // }
+        return char
+
+    }
+
+    calTileNeighbors(grid) {
+        // dict to convert neighbor cord into list index
+        for (let y=0;y<Math.ceil(this.h/worldBlockSize);y++) {
+            for (let x=0;x<Math.ceil(this.w/worldBlockSize);x++) {
+                var neighbors = w.getNeighborsForCords(x, y, grid)
+                // remember cord and there neighbors for use later
+                this.grid_pattern[`${x}_${y}`] = neighbors
+                // if (neighbors_check.join(',') === [false, true, true, true, true, false, false, false].join(',')) {
+                //     console.log(neighbors) // tffffttt
+                // }
+            }
+        }
+        return;
+    }
+
+    getNeighborsForCords(x, y, grid) {
+        function get_neighbor_wall(cord, val) {
+            let neighbor;
+            if (val == 0) {
+                neighbor = cord
+            }
+            else if (val == 1) {
+                neighbor = cord-1
+            } else {
+                neighbor = cord+1
+            }
+            return neighbor;
+        }
+        var neighbors = Array.from(Array(8))
+        var neighbor_indexs = {'0_1': 0, '0_2': 4, '1_0': 6, '1_1': 7, '1_2': 5, '2_0': 2, '2_1': 1, '2_2': 3}
+
+        // console.log(y,x)
+        for (let l=0;l<3;l++) {
+            let neighborX = get_neighbor_wall(x, l)
+
+            for (let o=0;o<3;o++) {
+                let neighborY = get_neighbor_wall(y, o)
+            
+                if (this.is_within_map_bounds(neighborX*worldBlockSize, neighborY*worldBlockSize)) {
+                    if (neighborX != x || neighborY != y) {
+                        var block = grid[neighborY][neighborX]
+                        neighbors[neighbor_indexs[`${l}_${o}`]] = block
+                    }
+                } else {
+                    // border = true
+                }
+            }
+        }
+        return neighbors
+    }
+
     convertToTileGrid() {
         // convert noise_grid to strings with unique where different characters represents different tile textures
         // e.g. water tiles = '-'
@@ -407,7 +498,14 @@ class customWorld {
             for (var x=0;x<noise_grid.length-1;x++) {
                 if (noise_grid[y][x]) {
                     // land tile
-                    this.tile_grid[y] += '='
+                    // use grid_pattern to determine which land sprite we want
+                    // e.g. '=' is equal to img/tiles/land/64/tile1.png
+                    var char = this.gridPatternToChar(`${x}_${y}`)
+
+                    if (char)
+                        this.tile_grid[y] += char
+                    else
+                        this.tile_grid[y] += '='
                 } else {
                     // water tile
                     this.tile_grid[y] += '-'
@@ -428,6 +526,12 @@ class customWorld {
             }
         }
         // console.log(visual_map)
+    }
+
+    convertCamCordsToWorldCords(x, y) {
+        let noise_gridY_center = Number.parseInt((this.tile_grid.length -1) / 2),
+            noise_gridX_center = Number.parseInt((this.tile_grid.length -1) / 2)
+        return [x+noise_gridX_center, y+noise_gridY_center]
     }
 
     calTilesOnScreen() {
@@ -457,6 +561,7 @@ class customWorld {
         // console.log(ys[0], ys[1], this.tile_grid.slice(ys[0], ys[1]), xs[0], xs[1])
 
         var screen_tile_grid = []
+        // console.log(ys, xs)
         this.tile_grid.slice(ys[0], ys[1]).forEach(x_string => {
             screen_tile_grid.push(x_string.slice(xs[0], xs[1]))
         })

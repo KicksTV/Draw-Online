@@ -42,11 +42,15 @@ class Cellular_Automata {
     }
 
     apply_cellular_automaton(grid, count) {
+        // dict to convert neighbor cord into list index
+        var neighbor_indexs = {'0_1': 4, '0_2': 0, '1_0': 6, '1_1': 5, '1_2': 7, '2_0': 2, '2_1': 3, '2_2': 1}
         for (var i=0; i<count;i++) {
             var temp_grid = _.cloneDeep(grid)
             for (let y=0;y<Math.ceil(w.h/worldBlockSize);y++) {
                 for (let x=0;x<Math.ceil(w.w/worldBlockSize);x++) {
-                    var neighbors = []
+                    var neighbors = Array.from(Array(8))
+                    var neighbors_check = []
+
                     var neighbor_wall_count = 0
                     let border = false
                     
@@ -61,7 +65,8 @@ class Cellular_Automata {
                             if (w.is_within_map_bounds(neighborX*worldBlockSize, neighborY*worldBlockSize)) {
                                 if (neighborX != x || neighborY != y) {
                                     var block = temp_grid[neighborY][neighborX]
-                                    neighbors.push(block)
+                                    neighbors_check.push(block)
+                                    neighbors[neighbor_indexs[`${l}_${o}`]] = grid[neighborY][neighborX]
                                     if (block) {
                                         neighbor_wall_count++
                                     }
@@ -90,11 +95,6 @@ class Cellular_Automata {
                     }
                     else {
                         grid[y][x] = false
-                    }
-                    
-                    if (i == count-1) {
-                        // remember cord and there neighbors for use later
-                        w.grid_pattern[`${y}_${x}`] = neighbors
                     }
                 }
             }

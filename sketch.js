@@ -62,7 +62,7 @@ function setup() {
     var cnv = createCanvas(windowWidth, windowHeight)
     cnv.parent("canvas")
 
-    camera.zoom = 0.5 //0.5
+    camera.zoom = 1 //0.5
     camera.x = 0
     camera.y = 0
 
@@ -95,9 +95,17 @@ function setup() {
     
     // w.generateTileMap(ca.grid_pattern)
 
+    w.calTileNeighbors(noise_grid)
+
     w.convertToTileGrid()
 
     w.initTiles()
+
+
+    // load land tile animations
+    for (var land_char of Object.keys(w.tiles)) {
+        loadAni(`img/tiles/land/${land_char.charCodeAt(0)}/tile1.png`, 6)
+    }
 
 
     objectLayer = new ObjectLayer()
@@ -168,6 +176,7 @@ function mouseMoved() {
 
 }
 
+
 function draw() {
     clear()
     fixedUpdate()   // physics
@@ -225,6 +234,20 @@ function keyPressed() {
         else
             loop()
     }
+}
+
+function mouseClicked(e) {
+    // get mouse cords
+    var x = Math.round(((mouseX-windowWidth/2)+camera.x)/worldBlockSize),
+        y = Math.round(((mouseY-windowHeight/2)+camera.y)/worldBlockSize);
+
+    // console.log(x, y)
+    // work out which tile has been clicked
+    var [x, y] = w.convertCamCordsToWorldCords(x, y)
+    // print out neighbors for debugging
+    var tile_char = w.tile_grid[y][x]
+    console.log(x, y, tile_char, w.grid_pattern[`${x}_${y}`], w.gridPatternToChar(`${x}_${y}`))
+    
 }
 
 // User defined functions
